@@ -15,13 +15,11 @@ type Lexeme = String
 -- | DataType for tokens
 data Token = TProgram | TResult
            | TLParen | TRParen
-           | TVar Lexeme | TDigit Lexeme
+           | TVar Lexeme
            | TAssignSym | TSuc | TPred
            | TWhile | TDo | TEnd | TSemicol
-           | TNeq
-           deriving Show
-
-
+           | TNeq0
+           deriving (Eq,Show)
 
 
 
@@ -36,7 +34,7 @@ scan ('E':'N':'D':xs) = return (TEnd,xs)
 scan ('S':'U':'C':xs) = return (TSuc,xs)
 scan ('P':'R':'E':'D':xs) = return (TPred,xs)
 scan (';':xs) = return (TSemicol,xs)
-scan ('/':'=':xs) = return (TNeq,xs)
+scan ('/':'=':' ':'0':xs) = return (TNeq0,xs)
 scan (':':'=':xs) = return (TAssignSym,xs)
 scan ('(':xs) = return (TLParen,xs)
 scan (')':xs) = return (TRParen,xs)
@@ -44,9 +42,9 @@ scan ('X':xs) = return (TVar ("X"++idf) ,xs')
   where idf   = takeWhile isDigit xs
         xs'   = dropWhile isDigit xs 
 scan (' ':xs) = scan xs
-scan(d:xs)    = if isDigit d
-                then return (TDigit [d],xs)
-                else fail "Error: No Parse"
+--scan(d:xs)    = if isDigit d
+--                then return (TDigit [d],xs)
+--                else fail "Error: No Parse"
 
 -- | Scanning function.
 
@@ -55,3 +53,8 @@ lexer [] = return []
 lexer inp = scan inp >>= \(tok,tail) ->
             lexer tail >>= \toks ->
             return (tok:toks)
+
+
+-- | Testing
+t1 = (extract . lexer) $ "PROGRAM (X12) WHILE DO () END"
+t2 = (extract . lexer) $ "X23 PROGRAM (X12) WHILE DO () END"

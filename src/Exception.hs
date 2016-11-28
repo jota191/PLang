@@ -15,3 +15,7 @@ instance Monad Exc where
               Error s  -> Error s
               Return a -> f a 
   fail    = Error
+
+extract :: Exc a -> a
+extract (Return a) = a
+extract (Error s)  = error s
