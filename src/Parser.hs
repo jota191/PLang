@@ -46,27 +46,47 @@ pTSuc     = pToken TSuc
 
 pTPred    = pToken TPred
 
+pTZero    = pToken TZero
+
 pTNeq0    = pToken TNeq0
 
 pTAssignSym
           = pToken TAssignSym
 
-pTVar :: PParser String
+pTVar :: PParser Int
 pTVar = Parser $ \ts -> case ts of
-                          (TVar s):ts' -> [(s,ts')]
+                          (TVar s):ts' -> [((read.tail) s,ts')]
                           _            -> []
 
 
 
 -- | generating AST
-pSec :: PParser Sec
-pSec = Sec <$> pSent <*> pSent
 
-pCond :: PParser Cond
+pSec = Sec <$> pList pSent
+
 pCond = (\var _ -> Nonzero var) <$> pTVar <*> pTNeq0
 
-pWhile :: PParser While
-pWhile = While <$> pCond <*> pSent 
+pWhile
+  = (\_ c _ s _-> While c s ) <$> pTWhile <*> pCond <*> pTDo <*> pSent <*> pTEnd
+ 
 
-pWhile :: PParser While
-pWhile = While <$> pCond <*> pSent 
+pExpr =     const Zero <$> pTZero
+     <|> (\_ _ v _ -> Succ v) <$> pTSuc  <*> pTLParen <*> pTVar <*> pTRParen  
+     <|> (\_ _ v _ -> Succ v) <$> pTPred <*> pTLParen <*> pTVar <*> pTRParen  
+        
+
+pAssign =  (\v _ e -> Assign v e) <$> pTVar <*> pTAssignSym <*> pExpr
+
+pSent =  ASent <$> pAssign
+     <|> WSen <$> pWhile
+    -- <|> SSent <$> pSec
+
+pProgram = (\_ _ vi _ s _ _ vo _ -> Program vi s vo) <$> pTProgram
+                                                     <*> pTLParen
+                                                     <*> pTVar
+                                                     <*> pTRParen
+                                                     <*> pSec
+                                                     <*> pTResult
+                                                     <*> pTLParen
+                                                     <*> pTVar
+                                                     <*> pTRParen

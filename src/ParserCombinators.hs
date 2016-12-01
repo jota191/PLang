@@ -31,6 +31,8 @@ pSucceed a = Parser $ \s -> [(a,s)]
 (<|>) :: Parser s a -> Parser s a -> Parser s a
 p <|> q = Parser $ \s -> runP p s ++ runP q s
 
+infixr 6 <|>
+
 (<$>) :: (a -> b) -> Parser s a -> Parser s b
 (<$>) = liftM
 

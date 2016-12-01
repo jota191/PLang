@@ -15,7 +15,7 @@ type Lexeme = String
 -- | DataType for tokens
 data Token = TProgram | TResult
            | TLParen | TRParen
-           | TVar Lexeme
+           | TVar Lexeme | TZero
            | TAssignSym | TSuc | TPred
            | TWhile | TDo | TEnd | TSemicol
            | TNeq0
@@ -41,6 +41,7 @@ scan (')':xs) = return (TRParen,xs)
 scan ('X':xs) = return (TVar ("X"++idf) ,xs')
   where idf   = takeWhile isDigit xs
         xs'   = dropWhile isDigit xs 
+scan ('0':xs) = return (TZero,xs)
 scan (' ':xs) = scan xs
 --scan(d:xs)    = if isDigit d
 --                then return (TDigit [d],xs)
