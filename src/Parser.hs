@@ -67,7 +67,7 @@ pSec = Sec <$> pList pSent
 pCond = (\var _ -> Nonzero var) <$> pTVar <*> pTNeq0
 
 pWhile
-  = (\_ c _ s _-> While c s ) <$> pTWhile <*> pCond <*> pTDo <*> pSent <*> pTEnd
+  = (\_ c _ s _-> While c s ) <$> pTWhile <*> pCond <*> pTDo <*> pSec <*> pTEnd
  
 
 pExpr =     const Zero <$> pTZero
@@ -77,10 +77,9 @@ pExpr =     const Zero <$> pTZero
 
 pAssign =  (\v _ e -> Assign v e) <$> pTVar <*> pTAssignSym <*> pExpr
 
-pSent =  ASent <$> pAssign
-     <|> WSen <$> pWhile
-    -- <|> SSent <$> pSec
-
+pSent =  pAssign
+     <|> pWhile
+    
 pProgram = (\_ _ vi _ s _ _ vo _ -> Program vi s vo) <$> pTProgram
                                                      <*> pTLParen
                                                      <*> pTVar
