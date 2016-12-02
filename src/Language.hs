@@ -22,10 +22,7 @@ data Sec     = Sec [Sent]
 
 deriving instance Show Cond
 deriving instance Show Sec
-
 deriving instance Show Expr
-
 deriving instance Show Sent
-
 deriving instance Show Program
 

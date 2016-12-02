@@ -72,7 +72,7 @@ pWhile
 
 pExpr =     const Zero <$> pTZero
      <|> (\_ _ v _ -> Succ v) <$> pTSuc  <*> pTLParen <*> pTVar <*> pTRParen  
-     <|> (\_ _ v _ -> Succ v) <$> pTPred <*> pTLParen <*> pTVar <*> pTRParen  
+     <|> (\_ _ v _ -> Pred v) <$> pTPred <*> pTLParen <*> pTVar <*> pTRParen  
         
 
 pAssign =  (\v _ e -> Assign v e) <$> pTVar <*> pTAssignSym <*> pExpr

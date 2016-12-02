@@ -24,3 +24,7 @@ class (Monad m) => MonadState s m | m -> s where
 instance MonadState s (State s) where
   put s = State $ \_ -> ((),s)
   get   = State $ \s -> (s,s)
+
+
+evalState :: State s a -> s -> a
+evalState m s = fst $ runState m s
