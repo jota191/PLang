@@ -1,0 +1,8 @@
+PROGRAM (X0)
+  X1 := 0
+  WHILE X0 /= 0 DO
+    X0 := PRED(X0)
+    X1 := SUC(X1)
+    X1 := SUC(X1)
+  END
+RESULT (X1)

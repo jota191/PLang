@@ -1,0 +1,4 @@
+  PROGRAM (X0)
+X1 :=  SUC(X0)
+X1 :=   PRED(X1)
+RESULT (X1 )
